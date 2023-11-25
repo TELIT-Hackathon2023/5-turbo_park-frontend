@@ -33,13 +33,7 @@ const NavigationBar = ({
 
   return (
     <View
-      style={[
-        style,
-        {
-          borderBottomColor: colors.gray,
-          borderBottomWidth: StyleSheet.hairlineWidth,
-        },
-      ]}
+      style={style}
     >
       <View style={styles.container}>
         <View style={styles.titles}>

@@ -24,13 +24,21 @@ const SignInScreen = ({
   const [emailAddress, setEmailAddres] = useState<string>();
   const [password, setPassword] = useState<string>();
 
-  const signIn = () => {};
+  const signIn = () => {
+
+  };
+
+  const signUp = () => {
+    navigation.navigate("signUp")
+  }
 
   return (
     <>
       <NavigationBar title="Sign In" />
 
-      <Text style={[styles.text, {color: colors.secondaryText}]}>Hello stranger! Please sign in to use this app.</Text>
+      <Text style={[styles.text, { color: colors.secondaryText }]}>
+        Hello stranger! Please sign in to use this app.
+      </Text>
 
       <TextInput
         style={[styles.input, { backgroundColor: colors.gray }]}
@@ -55,6 +63,15 @@ const SignInScreen = ({
       >
         <Text style={styles.buttonText}>Sign In</Text>
       </TouchableOpacity>
+
+      <Text
+        style={[styles.text, { color: colors.secondaryText, marginTop: 20 }]}
+      >
+        Not a member?
+      </Text>
+      <TouchableOpacity onPress={signUp}>
+        <Text style={[styles.signUpText, { color: colors.tint }]}>Sign Up</Text>
+      </TouchableOpacity>
     </>
   );
 };
@@ -69,7 +86,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   text: {
-    alignSelf: 'center',
+    alignSelf: "center",
     marginBottom: 10,
     fontSize: 16,
   },
@@ -84,6 +101,11 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     alignSelf: "center",
     color: "#FFFFFF",
+  },
+  signUpText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    alignSelf: "center",
   },
 });
 

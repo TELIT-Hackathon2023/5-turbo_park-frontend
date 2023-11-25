@@ -14,7 +14,6 @@ import NavigationBar from "../components/NavigationBar";
 import { SheetParams } from "../types/SheetParams";
 import SheetBackground from "../components/SheetBackground";
 import Back from "../assets/back.svg";
-import Save from "../assets/save.svg";
 import Add from "../assets/add.svg";
 import {
   BottomSheetBackdrop,
@@ -58,6 +57,14 @@ const ProfileScreen = ({
         <TextInput
           style={[styles.input, { backgroundColor: colors.gray }]}
           selectionColor={colors.tint}
+          value={emailAddress}
+          onChangeText={setEmailAddres}
+          placeholder="Email Address"
+        />
+
+        <TextInput
+          style={[styles.input, { backgroundColor: colors.gray }]}
+          selectionColor={colors.tint}
           value={username}
           onChangeText={setUsername}
           placeholder="Full Name"
@@ -70,14 +77,6 @@ const ProfileScreen = ({
           onChangeText={setPhoneNumber}
           placeholder="Phone Number"
           keyboardType="numeric"
-        />
-
-        <TextInput
-          style={[styles.input, { backgroundColor: colors.gray }]}
-          selectionColor={colors.tint}
-          value={emailAddress}
-          onChangeText={setEmailAddres}
-          placeholder="Email Address"
         />
 
         <TextInput
