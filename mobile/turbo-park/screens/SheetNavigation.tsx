@@ -19,7 +19,7 @@ const SheetNavigation = () => {
 
   return (
     <NavigationContainer ref={navigationRef} onReady={() =>
-      navigationRef.navigate("date")
+      navigationRef.navigate("signIn")
     }>
       <Sheet.Navigator
         screenOptions={{

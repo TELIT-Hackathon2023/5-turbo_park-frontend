@@ -21,15 +21,15 @@ const styles = StyleSheet.create({});
 
 export const signUpSheetOptions: BottomSheetNavigationOptions = {
   index: 0,
-  snapPoints: ["40%"],
+  snapPoints: ["90%"],
   backgroundComponent: (props) => <SheetBackground {...props} rounded={true} />,
   backdropComponent: (props) => (
     <BottomSheetBackdrop
       {...props}
       enableTouchThrough={true}
-      appearsOnIndex={2}
-      disappearsOnIndex={1}
-      pressBehavior="collapse"
+      appearsOnIndex={0}
+      disappearsOnIndex={-1}
+      pressBehavior="none"
     />
   ),
 };
