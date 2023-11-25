@@ -1,9 +1,15 @@
-import React, { useRef, useEffect } from 'react';
+// @ts-nocheck
+import React, { useRef, useEffect, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 import './App.css';
+import Profile from './components/Profile'
+import BookNow from './components/BookNow';
+import Login from './components/Login';
+import Register from './components/Register';
 
 function App() {
   const mapContainerRef = useRef<HTMLDivElement>(null);
+  const [screen, setScreen] = useState<string>('');
 
   useEffect(() => {
     if (mapContainerRef.current) {
@@ -18,15 +24,34 @@ function App() {
     }
   }, []);
 
+    // Function to update screen state
+    const updateScreen = (newScreen) => {
+      setScreen(newScreen);
+    };
+
   return (
     <div className="App">
-      <div ref={mapContainerRef} className='h-screen	w-screen absolute top-0 z-0 float-left'/>
-      <div className='h-screen w-2/5 z-40 relative'>
-        <div className=' bg-white m-8 h-fit rounded-lg p-10 flex w-full text-center content-center'>
-          <h3 className='text-4xl font-extrabold'>Booking</h3>
+      <div ref={mapContainerRef} className='h-screen w-screen absolute top-0 z-0 float-left'/>
+      <div className='h-screen w-2/5 z-40 relative flex justify-items-center align-items-center'>
+        <div className=' bg-white m-8 h-fit rounded-3xl p-10 flex flex-col gap-5 w-full text-center justify-start '>
+          <scale-logo variant="magenta" transparent="true"></scale-logo>
+          {screen === 'home' ? (
+            <BookNow updateScreen={updateScreen}></BookNow>
+          ): screen === 'profile' ? (
+            <Profile updateScreen={updateScreen}></Profile>
+          ): screen === 'login' ? (
+            <Login updateScreen={updateScreen}></Login>
+          ): screen === 'register' ? (
+            <Register updateScreen={updateScreen}></Register>
+          ):(
+            <div className='gap-5 flex flex-col'>
+              <p>In order to use the app you need to be logged in</p>
+              <scale-button onClick={() => setScreen('login')}>Login</scale-button>
+            </div>
+          )
+          }
         </div>
       </div>
-      
     </div>
   );
 }
