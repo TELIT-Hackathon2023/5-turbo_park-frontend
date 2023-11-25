@@ -8,17 +8,17 @@ import NavigationBar from "../components/NavigationBar";
 import { SheetParams } from "../types/SheetParams";
 import SheetBackground from "../components/SheetBackground";
 
-const SettingsScreen = ({
+const ProfileScreen = ({
   route,
   navigation,
-}: BottomSheetScreenProps<SheetParams, "settings">) => {
+}: BottomSheetScreenProps<SheetParams, "profile">) => {
   const safeAreaInsets = useSafeAreaInsets();
 
   return (
     <>
       <NavigationBar
         style={{ paddingTop: safeAreaInsets.top + 10 }}
-        title={"Settings"}
+        title={"Profile"}
       />
     </>
   );
@@ -26,9 +26,9 @@ const SettingsScreen = ({
 
 const styles = StyleSheet.create({});
 
-export default SettingsScreen;
+export default ProfileScreen;
 
-export const settingsSheetOptions: BottomSheetNavigationOptions = {
+export const profileSheetOptions: BottomSheetNavigationOptions = {
   index: 0,
   snapPoints: ["100%"],
   handleComponent: () => null,

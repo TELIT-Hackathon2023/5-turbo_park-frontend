@@ -1,10 +1,8 @@
 export type SheetParams = {
+  map: undefined;
   signIn: undefined;
   signUp: undefined;
-  map: undefined;
   landing: undefined;
-  history: undefined;
-  settings: undefined;
-  book: undefined;
-  report: undefined;
+  editBooking: undefined;
+  profile: undefined;
 };

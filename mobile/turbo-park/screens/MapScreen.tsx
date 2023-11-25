@@ -11,6 +11,7 @@ Mapbox.setAccessToken(
 );
 
 const MapScreen = ({
+  route,
   navigation,
 }: BottomSheetScreenProps<SheetParams, "map">) => {
   const sideInset = 10;
@@ -32,10 +33,13 @@ const MapScreen = ({
       <Camera
         ref={cameraRef}
         minZoomLevel={9}
-        maxZoomLevel={17}
+        maxZoomLevel={20}
         defaultSettings={{
-          centerCoordinate: [20.38693331183412, 48.91194127614099],
-          zoomLevel: 9,
+          centerCoordinate: [
+            21.24783183853421,
+            48.70616417660523
+          ],
+          zoomLevel: 17,
           padding: {
             paddingTop: 0,
             paddingBottom: bottomInset,

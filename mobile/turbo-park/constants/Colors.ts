@@ -4,7 +4,7 @@ export const Colors = {
   light: {
     tint: "#E20074FF",
     text: "#000000FF",
-    secondaryText: "#00000041",
+    secondaryText: "#0000007F",
     background: "#FFFFFFFF",
     gray: "#F7F7F8FF",
     green: "#00B367FF",
@@ -13,7 +13,7 @@ export const Colors = {
   dark: {
     tint: "#E20074FF",
     text: "#000000FF",
-    secondaryText: "#00000041",
+    secondaryText: "#0000007F",
     background: "#FFFFFFFF",
     gray: "#F7F7F8FF",
     green: "#00B367FF",

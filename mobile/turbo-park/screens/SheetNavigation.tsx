@@ -6,6 +6,10 @@ import { createBottomSheetNavigator } from "@th3rdwave/react-navigation-bottom-s
 import { SheetParams } from "../types/SheetParams";
 import MapScreen from "./MapScreen";
 import LandingScreen, { landingSheetOptions } from "./LandingScreen";
+import SignInScreen, { signInSheetOptions } from "./SignInScreen";
+import SignUpScren, { signUpSheetOptions } from "./SignUpScren";
+import EditBookingScreen, { editBookingSheetOptions } from "./EditBookingScreen";
+import ProfileScreen, { profileSheetOptions } from "./ProfileScreen";
 
 const Sheet = createBottomSheetNavigator<SheetParams>();
 
@@ -20,7 +24,11 @@ const SheetNavigation = () => {
         }}
       >
         <Sheet.Screen name="map" component={MapScreen} />
+        <Sheet.Screen name="signIn" component={SignInScreen} options={signInSheetOptions} />
+        <Sheet.Screen name="signUp" component={SignUpScren} options={signUpSheetOptions} />
         <Sheet.Screen name="landing" component={LandingScreen} options={landingSheetOptions} />
+        <Sheet.Screen name="editBooking" component={EditBookingScreen} options={editBookingSheetOptions} />
+        <Sheet.Screen name="profile" component={ProfileScreen} options={profileSheetOptions} />
       </Sheet.Navigator>
     </NavigationContainer>
   );
