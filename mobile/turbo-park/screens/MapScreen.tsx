@@ -24,7 +24,8 @@ const MapScreen = ({
     <MapView
       style={StyleSheet.absoluteFillObject}
       scaleBarEnabled={false}
-      compassEnabled={false}
+      compassEnabled={true}
+      compassFadeWhenNorth={true}
     >
       <Camera
         ref={cameraRef}

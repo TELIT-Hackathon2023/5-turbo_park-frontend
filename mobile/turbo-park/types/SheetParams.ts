@@ -4,7 +4,7 @@ export type SheetParams = {
   signUp: undefined;
   landing: undefined;
   date: undefined;
-  booking: undefined;
-  editBooking: undefined;
+  slot: { id: number; fromHour?: number; toHour?: number };
+  editBooking: { id: number };
   profile: undefined;
 };

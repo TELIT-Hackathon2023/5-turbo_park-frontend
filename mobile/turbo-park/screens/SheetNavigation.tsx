@@ -11,6 +11,7 @@ import SignUpScren, { signUpSheetOptions } from "./SignUpScren";
 import EditBookingScreen, { editBookingSheetOptions } from "./EditBookingScreen";
 import ProfileScreen, { profileSheetOptions } from "./ProfileScreen";
 import DateScreen, { dateSheetOptions } from "./DateScreen";
+import SlotScreen, { slotSheetOptions } from "./SlotScreen";
 
 const Sheet = createBottomSheetNavigator<SheetParams>();
 
@@ -19,7 +20,7 @@ const SheetNavigation = () => {
 
   return (
     <NavigationContainer ref={navigationRef} onReady={() =>
-      navigationRef.navigate("signIn")
+      navigationRef.navigate("slot", { id: 1 })
     }>
       <Sheet.Navigator
         screenOptions={{
@@ -31,6 +32,7 @@ const SheetNavigation = () => {
         <Sheet.Screen name="signUp" component={SignUpScren} options={signUpSheetOptions} />
         <Sheet.Screen name="landing" component={LandingScreen} options={landingSheetOptions} />
         <Sheet.Screen name="date" component={DateScreen} options={dateSheetOptions} />
+        <Sheet.Screen name="slot" component={SlotScreen} options={slotSheetOptions} />
         <Sheet.Screen name="editBooking" component={EditBookingScreen} options={editBookingSheetOptions} />
         <Sheet.Screen name="profile" component={ProfileScreen} options={profileSheetOptions} />
       </Sheet.Navigator>
