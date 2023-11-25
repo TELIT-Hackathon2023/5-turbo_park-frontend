@@ -21,7 +21,7 @@ const MapScreen = ({
   const colors = useColors();
 
   useEffect(() => {
-    navigation.navigate("landing")
+    navigation.navigate("profile")
   }, [])
 
   return (

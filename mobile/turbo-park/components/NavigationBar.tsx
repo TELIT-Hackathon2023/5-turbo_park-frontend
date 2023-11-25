@@ -87,12 +87,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   title: {
-    fontFamily: "Inter-Bold",
+    fontWeight: "bold",
     fontSize: 18,
     textAlign: "center",
   },
   subtitle: {
-    fontFamily: "Inter-Regular",
     fontSize: 14,
     textAlign: "center",
   },
