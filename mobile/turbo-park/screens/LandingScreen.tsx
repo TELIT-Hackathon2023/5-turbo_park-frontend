@@ -24,13 +24,17 @@ const LandingScreen = ({
         <Text>Profile</Text>
       </TouchableOpacity>
 
-      <EditSlot
+      <BookSlot name="John" onPress={() => {
+
+      }} />
+
+      {/* <EditSlot
         name="John"
         slotId="1"
         time="9-18"
         plate="KE0000AA"
         onPress={() => {}}
-      />
+      /> */}
     </View>
   );
 };

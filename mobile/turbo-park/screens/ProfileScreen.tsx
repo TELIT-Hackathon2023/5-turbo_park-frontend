@@ -57,6 +57,7 @@ const ProfileScreen = ({
       >
         <TextInput
           style={[styles.input, { backgroundColor: colors.gray }]}
+          selectionColor={colors.tint}
           value={username}
           onChangeText={setUsername}
           placeholder="Full Name"
@@ -64,6 +65,7 @@ const ProfileScreen = ({
 
         <TextInput
           style={[styles.input, { backgroundColor: colors.gray }]}
+          selectionColor={colors.tint}
           value={phoneNumber}
           onChangeText={setPhoneNumber}
           placeholder="Phone Number"
@@ -72,6 +74,7 @@ const ProfileScreen = ({
 
         <TextInput
           style={[styles.input, { backgroundColor: colors.gray }]}
+          selectionColor={colors.tint}
           value={emailAddress}
           onChangeText={setEmailAddres}
           placeholder="Email Address"
@@ -79,6 +82,7 @@ const ProfileScreen = ({
 
         <TextInput
           style={[styles.input, { backgroundColor: colors.gray }]}
+          selectionColor={colors.tint}
           value={identifier}
           onChangeText={setIdentifier}
           placeholder="Identifier"
@@ -92,13 +96,14 @@ const ProfileScreen = ({
               <TextInput
                 key={index}
                 style={[styles.input, { backgroundColor: colors.gray }]}
+                selectionColor={colors.tint}
                 value={plates[index]}
                 onChangeText={(text) => {
                   const updatedPlates = [...plates];
                   updatedPlates[index] = text;
                   setPlates(updatedPlates);
                 }}
-                placeholder="Identifier"
+                placeholder="Plate Number"
               />
             );
           })}

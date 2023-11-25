@@ -20,10 +20,6 @@ const MapScreen = ({
   const cameraRef = useRef<Camera>(null);
   const colors = useColors();
 
-  useEffect(() => {
-    navigation.navigate("profile")
-  }, [])
-
   return (
     <MapView
       style={StyleSheet.absoluteFillObject}
