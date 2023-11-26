@@ -6,8 +6,8 @@ const Profile = ({ updateScreen }) => {
     const [user, setUser] = useState({
         email: "bob@example.com",
         id: 1,
-        licencePlateNumber: "KE456RI",
-        name: "Bob",
+        licencePlateNumber: "",
+        name: "",
         personalId: 123456,
         phoneNumber: "+421000000000",
         surname: "Bobers"
@@ -94,6 +94,7 @@ const Profile = ({ updateScreen }) => {
             console.log(json);
           })
         })
+        fetchData()
     }
 
     const logout = () => {
