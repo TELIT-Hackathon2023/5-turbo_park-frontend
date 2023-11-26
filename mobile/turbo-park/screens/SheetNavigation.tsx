@@ -16,12 +16,19 @@ import DateScreen, { dateSheetOptions } from "./DateScreen";
 import SlotScreen, { slotSheetOptions } from "./SlotScreen";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ReportScreen, { reportSheetOptions } from "./ReportScreen";
-import AvailableSlotsScreen, { availableSlotsSheetOptions } from "./AvailableSlotsScreen";
+import AvailableSlotsScreen, {
+  availableSlotsSheetOptions,
+} from "./AvailableSlotsScreen";
+import { useState } from "react";
 
 const Sheet = createBottomSheetNavigator<SheetParams>();
 
 const SheetNavigation = () => {
   const navigationRef = createNavigationContainerRef<SheetParams>();
+
+  const [day, setDay] = useState<Date>();
+  const [fromHour, setFromHour] = useState<number>();
+  const [toHour, setToHour] = useState<number>();
 
   return (
     <NavigationContainer
@@ -58,16 +65,38 @@ const SheetNavigation = () => {
           component={LandingScreen}
           options={landingSheetOptions}
         />
-        <Sheet.Screen
+        {/* <Sheet.Screen
           name="date"
-          component={DateScreen}
+          component={(props) => (
+            <DateScreen>
+              {props => } 
+            </DateScreen>
+          )}
           options={dateSheetOptions}
-        />
-        <Sheet.Screen
-          name="slot"
-          component={SlotScreen}
-          options={slotSheetOptions}
-        />
+        /> */}
+        <Sheet.Screen name="date" options={dateSheetOptions}>
+          {(props) => (
+            <DateScreen
+              {...props}
+              onSearch={(day, fromHour, toHour) => {
+                setDay(day);
+                setFromHour(fromHour);
+                setToHour(toHour);
+              }}
+            />
+          )}
+        </Sheet.Screen>
+        <Sheet.Screen name="slot" options={slotSheetOptions}>
+          {(props) => (
+            <SlotScreen
+              {...props}
+              day={day}
+              fromHour={fromHour}
+              toHour={toHour}
+              onBook={() => {}}
+            />
+          )}
+        </Sheet.Screen>
         <Sheet.Screen
           name="editBooking"
           component={EditBookingScreen}
@@ -83,7 +112,7 @@ const SheetNavigation = () => {
           component={ReportScreen}
           options={reportSheetOptions}
         />
-        <Sheet.Screen 
+        <Sheet.Screen
           name="availableSlots"
           component={AvailableSlotsScreen}
           options={availableSlotsSheetOptions}

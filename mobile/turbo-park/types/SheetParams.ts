@@ -1,3 +1,5 @@
+import { EmployeeTicket } from "./EmployeeTicket";
+
 export type SheetParams = {
   map: undefined;
   signIn: undefined;
@@ -12,7 +14,7 @@ export type SheetParams = {
     fromHour?: number;
     toHour?: number;
   };
-  editBooking: { token: number; ticketId: number };
+  editBooking: { token: number; employeeTicket: EmployeeTicket };
   profile: { token: number };
   report: { slotId: number };
   availableSlots: { token: number; startDate: Date; endDate: Date };

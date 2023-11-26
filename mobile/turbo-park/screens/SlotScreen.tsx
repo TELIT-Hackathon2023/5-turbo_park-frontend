@@ -11,19 +11,54 @@ import { useColors } from "../constants/Colors";
 import Back from "../assets/back.svg";
 import { useEffect } from "react";
 
+interface SlotScreenProps extends BottomSheetScreenProps<SheetParams, "slot"> {
+  day: Date,
+  fromHour: number
+  toHour: number,
+  onBook: () => void
+}
+
 const SlotScreen = ({
   route,
   navigation,
-}: BottomSheetScreenProps<SheetParams, "slot">) => {
+  day,
+  fromHour,
+  toHour,
+  onBook
+}: SlotScreenProps) => {
   const colors = useColors();
 
   const report = () => {
     navigation.navigate("report", { slotId: route.params.id });
   };
-  
-  const book = () => {
-    
-  }
+
+  const book = async () => {
+    const startDate = new Date(day)
+    startDate.setHours(fromHour)
+
+    const endDate = new Date(day)
+    endDate.setHours(toHour)
+
+    await fetch(`http://147.232.155.76:8080/ticket`, {
+      method: "POST",
+      body: JSON.stringify({
+        employeeID: route.params.token,
+        parkingSlotID: route.params.id,
+        startDate,
+        endDate,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then((response) => {
+      if (!response.ok) {
+        console.log(`user update failed: ${response}`)
+        return;
+      }
+
+      navigation.navigate("landing", { token: route.params.token });
+    });
+  };
 
   return (
     <>

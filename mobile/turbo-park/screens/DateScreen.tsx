@@ -20,10 +20,11 @@ import Clock from "../assets/clock.svg";
 import NavigationBar from "../components/NavigationBar";
 import Back from "../assets/back.svg";
 
-const DateScreen = ({
-  route,
-  navigation,
-}: BottomSheetScreenProps<SheetParams, "date">) => {
+interface DateScreenProps extends BottomSheetScreenProps<SheetParams, "date"> {
+  onSearch: (day: Date, fromHour: number, toHour: number) => void;
+}
+
+const DateScreen = ({ route, navigation, onSearch }: DateScreenProps) => {
   const colors = useColors();
 
   const zeroHours = (oldDate: Date) => {
@@ -142,7 +143,7 @@ const DateScreen = ({
 
         <TouchableOpacity
           style={[styles.button, { backgroundColor: colors.tint }]}
-          // onPress={search}
+          onPress={() => onSearch(day, fromHour, toHour)}
         >
           <Text style={styles.buttonText}>Search</Text>
         </TouchableOpacity>

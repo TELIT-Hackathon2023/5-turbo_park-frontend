@@ -31,7 +31,15 @@ const LandingScreen = ({
   const [hasFetchedTicket, setHasFetchedTicket] = useState(false);
   const [employeeTicket, setEmployeeTicket] = useState<EmployeeTicket>();
 
+  navigation.addListener("focus", () => {
+    refetch()
+  })
+
   useEffect(() => {
+    refetch()
+  }, []);
+
+  const refetch = () => {
     fetch(`http://147.232.155.76:8080/employee/${route.params.token}`)
       .then((response) => response.json() as Promise<Employee>)
       .then(setEmployee)
@@ -39,10 +47,14 @@ const LandingScreen = ({
 
     fetch(`http://147.232.155.76:8080/ticket/user/${route.params.token}`)
       .then((response) => response.json() as Promise<EmployeeTicket>)
-      .then(setEmployeeTicket)
+      .then((ticket) => {
+        setEmployeeTicket(ticket);
+      })
       .catch(console.log)
       .finally(() => setHasFetchedTicket(true));
-  }, []);
+  }
+
+  console.log({employeeTicket})
 
   if (!employee || !hasFetchedTicket) {
     return <ActivityIndicator color={colors.tint} />;
@@ -74,7 +86,7 @@ const LandingScreen = ({
           onPress={() => {
             navigation.navigate("editBooking", {
               token: route.params.token,
-              ticketId: employeeTicket.id,
+              employeeTicket: employeeTicket
             });
           }}
         />
@@ -88,16 +100,6 @@ const LandingScreen = ({
           }}
         />
       )}
-
-      {/* <BookSlot name="John" onPress={() => {}} /> */}
-
-      {/* <EditSlot
-        name="John"
-        slotId="1"
-        time="9-18"
-        plate="KE0000AA"
-        onPress={() => {}}
-      /> */}
     </View>
   );
 };

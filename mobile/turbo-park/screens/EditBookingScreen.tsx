@@ -29,9 +29,15 @@ const EditBookingScreen = ({
 }: BottomSheetScreenProps<SheetParams, "editBooking">) => {
   const colors = useColors();
 
-  const [day, setDay] = useState<Date>();
-  const [fromHour, setFromHour] = useState<number>();
-  const [toHour, setToHour] = useState<number>();
+  const [day, setDay] = useState<Date>(
+    new Date(route.params.employeeTicket.startDate)
+  );
+  const [fromHour, setFromHour] = useState<number>(
+    new Date(route.params.employeeTicket.startDate).getHours()
+  );
+  const [toHour, setToHour] = useState<number>(
+    new Date(route.params.employeeTicket.endDate).getHours()
+  );
 
   const zeroHours = (oldDate: Date) => {
     return new Date(oldDate.setHours(0, 0, 0, 0));
@@ -61,10 +67,7 @@ const EditBookingScreen = ({
     const endDate = new Date(day);
     endDate.setHours(toHour);
 
-    console.log({startDate})
-    console.log({endDate})
-
-    fetch(`http://147.232.155.76:8080/ticket/${route.params.ticketId}`, {
+    fetch(`http://147.232.155.76:8080/ticket/${route.params.employeeTicket.id}`, {
       method: "PUT",
       body: JSON.stringify({
         startDate: startDate.toISOString(),
@@ -83,7 +86,7 @@ const EditBookingScreen = ({
   };
 
   const deleteTicket = () => {
-    fetch(`http://147.232.155.76:8080/ticket/${route.params.ticketId}`, {
+    fetch(`http://147.232.155.76:8080/ticket/${route.params.employeeTicket.id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -95,19 +98,7 @@ const EditBookingScreen = ({
       }
       navigation.goBack();
     });
-  }
-
-  useEffect(() => {
-    fetch(`http://147.232.155.76:8080/ticket/${route.params.token}`)
-      .then((response) => response.json() as Promise<EmployeeTicket>)
-      .then((ticket) => {
-        console.log({ ticket });
-        setDay(new Date(ticket.startDate));
-        setFromHour(new Date(ticket.startDate).getHours());
-        setToHour(new Date(ticket.endDate).getHours());
-      })
-      .catch(console.log);
-  }, []);
+  };
 
   if (!day) {
     return <ActivityIndicator color={colors.tint} />;
