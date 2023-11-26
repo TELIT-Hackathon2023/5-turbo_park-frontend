@@ -3,10 +3,11 @@ import { ParkingSlotList } from "../types/ParkingSlotList";
 
 interface MapSlotsProps {
   slots: ParkingSlotList[];
+  employeeSlotId?: number;
   onPress: (feature: GeoJSON.Feature) => void;
 }
 
-const MapRoutes = ({ slots, onPress }: MapSlotsProps) => {
+const MapRoutes = ({ slots, employeeSlotId, onPress }: MapSlotsProps) => {
   const fillStyle = {
     fillColor: ["get", "color"],
     fillOpacity: 0.7,
@@ -15,8 +16,8 @@ const MapRoutes = ({ slots, onPress }: MapSlotsProps) => {
   const symbolStyle = {
     textField: ["get", "text"],
     textSize: 16,
-    textColor: "#FFFFFF"
-  }
+    textColor: "#FFFFFF",
+  };
 
   const shape: GeoJSON.FeatureCollection = {
     type: "FeatureCollection",
@@ -36,8 +37,14 @@ const MapRoutes = ({ slots, onPress }: MapSlotsProps) => {
         ],
       },
       properties: {
+        status: slot.status,
         text: slot.id,
-        color: slot.status === "FREE" ? "green" : "red",
+        color:
+          slot.id === employeeSlotId
+            ? "orange"
+            : slot.status === "FREE"
+            ? "green"
+            : "red",
       },
     })),
   };

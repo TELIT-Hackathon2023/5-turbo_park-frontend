@@ -9,6 +9,7 @@ import { BottomSheetBackdrop } from "@gorhom/bottom-sheet";
 import SheetBackground from "../components/SheetBackground";
 import { useColors } from "../constants/Colors";
 import Back from "../assets/back.svg";
+import { useEffect } from "react";
 
 const SlotScreen = ({
   route,
@@ -26,10 +27,14 @@ const SlotScreen = ({
 
       <View style={styles.container}>
         <View style={styles.row}>
-          <View style={styles.status} />
+          <View
+            style={[styles.status, { backgroundColor: route.params.color }]}
+          />
 
           <View style={styles.info}>
             <Text style={styles.text}>Status</Text>
+            {route.params.status && <Text>{route.params.status}</Text>}
+
             {route.params.fromHour && (
               <Text style={styles.time}>
                 {`${route.params.fromHour}:00 - ${route.params.toHour}:00`}
@@ -38,11 +43,13 @@ const SlotScreen = ({
           </View>
         </View>
 
-        <TouchableOpacity
-          style={[styles.button, { backgroundColor: colors.tint }]}
-        >
-          <Text style={styles.buttonText}>Book</Text>
-        </TouchableOpacity>
+        {route.params.status !== "FREE" && (
+          <TouchableOpacity
+            style={[styles.button, { backgroundColor: colors.red }]}
+          >
+            <Text style={styles.buttonText}>Report Vehicle</Text>
+          </TouchableOpacity>
+        )}
       </View>
     </>
   );
@@ -73,9 +80,6 @@ const styles = StyleSheet.create({
     width: 32,
     height: 56,
     borderRadius: 5,
-    backgroundColor: "#00B3677F",
-    borderColor: "#00B367FF",
-    borderWidth: 4,
   },
   button: {
     borderRadius: 15,

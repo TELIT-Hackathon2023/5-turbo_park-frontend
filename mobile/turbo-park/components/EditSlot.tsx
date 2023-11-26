@@ -18,15 +18,10 @@ const EditSlot = ({ name, slotId, fromTime, toTime, plate, onPress }: EditSlotPr
   return (
     <View style={styles.container}>
       <Text style={[styles.titleText, { color: colors.text }]}>
-        Check your ticket {name}!
+        You currently park at Slot {slotId}
       </Text>
 
-      <Text style={[styles.subtitleText, { color: colors.secondaryText }]}>
-        {"Slot: "}
-        {slotId}
-      </Text>
-
-      <Text style={[styles.subtitleText, { color: colors.secondaryText }]}>
+      <Text style={[styles.subtitleText, { color: colors.secondaryText, marginTop: 20 }]}>
         {fromTime.split("T")[0]}
         {" "}
         {fromDate.getHours()}
