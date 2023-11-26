@@ -34,7 +34,7 @@ const ReportScreen = ({
   return (
     <View>
       <NavigationBar
-        title={"Report Vehicle"}
+        title={`Report Slot ${route.params.slotId}`}
         leftButtonAction={() => navigation.goBack()}
         LeftButtonIcon={Back}
       />
@@ -45,7 +45,7 @@ const ReportScreen = ({
       </Text>
 
       <Text style={[styles.subtitle, { color: colors.secondaryText }]}>
-        Report it!
+        Take action!
       </Text>
 
       <TextInput
@@ -64,7 +64,7 @@ const ReportScreen = ({
         style={[styles.button, { backgroundColor: colors.red }]}
         onPress={report}
       >
-        <Text style={styles.buttonText}>Report</Text>
+        <Text style={styles.buttonText}>Report Vehicle</Text>
       </TouchableOpacity>
     </View>
   );

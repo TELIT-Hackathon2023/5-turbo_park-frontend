@@ -12,7 +12,7 @@ export type SheetParams = {
     fromHour?: number;
     toHour?: number;
   };
-  editBooking: { token: number; id: number };
+  editBooking: { token: number; ticketId: number };
   profile: { token: number };
   report: { slotId: number };
   availableSlots: { token: number; startDate: Date; endDate: Date };

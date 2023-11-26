@@ -72,7 +72,10 @@ const LandingScreen = ({
           toTime={employeeTicket.endDate}
           plate={employee.licencePlateNumber}
           onPress={() => {
-            console.log("edit");
+            navigation.navigate("editBooking", {
+              token: route.params.token,
+              ticketId: employeeTicket.id,
+            });
           }}
         />
       )}
@@ -108,7 +111,7 @@ const styles = StyleSheet.create({
   logo: {
     width: 64,
     height: 64,
-    marginTop: 20
+    marginTop: 20,
   },
   profileButton: {
     position: "absolute",
@@ -119,7 +122,7 @@ const styles = StyleSheet.create({
 
 export const landingSheetOptions: BottomSheetNavigationOptions = {
   index: 0,
-  snapPoints: ["30%"],
+  snapPoints: ["35%"],
   handleComponent: () => null,
   backgroundComponent: (props) => <SheetBackground {...props} rounded={true} />,
   // backdropComponent: (props) => (

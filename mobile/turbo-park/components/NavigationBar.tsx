@@ -47,7 +47,7 @@ const NavigationBar = ({
 
         {LeftButtonIcon && (
           <TouchableOpacity
-            style={[styles.button, { left: 15, backgroundColor: colors.gray }]}
+            style={[styles.button, { left: 20, backgroundColor: colors.gray }]}
             onPress={leftButtonAction}
           >
             <LeftButtonIcon width={22} height={22} color={colors.tint} />
@@ -58,7 +58,7 @@ const NavigationBar = ({
           <TouchableOpacity
             style={[
               styles.button,
-              { right: 15, backgroundColor: colors.gray },
+              { right: 20, backgroundColor: colors.gray },
             ]}
             onPress={rightButtonAction}
           >

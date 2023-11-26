@@ -100,6 +100,7 @@ const DateScreen = ({
           <DateTimePicker
             mode="date"
             value={day}
+            accentColor={colors.tint}
             minimumDate={getMinDay()}
             maximumDate={getMaxDay()}
             onChange={(event) => {

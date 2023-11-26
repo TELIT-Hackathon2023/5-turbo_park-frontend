@@ -41,10 +41,10 @@ const MapRoutes = ({ slots, employeeSlotId, onPress }: MapSlotsProps) => {
         text: slot.id,
         color:
           slot.id === employeeSlotId
-            ? "orange"
+            ? "blue"
             : slot.status === "FREE"
             ? "green"
-            : "red",
+            : "orange",            
       },
     })),
   };
