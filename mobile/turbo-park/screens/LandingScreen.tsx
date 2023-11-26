@@ -8,11 +8,15 @@ import { BottomSheetBackdrop } from "@gorhom/bottom-sheet";
 import BookSlot from "../components/BookSlot";
 import EditSlot from "../components/EditSlot";
 import { SheetParams } from "../types/SheetParams";
+import Profile from "../assets/profile.svg";
+import { useColors } from "../constants/Colors";
 
 const LandingScreen = ({
   route,
   navigation,
 }: BottomSheetScreenProps<SheetParams, "landing">) => {
+  const colors = useColors();
+
   return (
     <View style={styles.container}>
       <Image
@@ -20,13 +24,13 @@ const LandingScreen = ({
         source={require("../assets/telekom-logo.jpg")}
       />
 
-      <TouchableOpacity style={styles.profileButton}>
-        <Text>Profile</Text>
+      <TouchableOpacity style={styles.profileButton} onPress={() => {
+        navigation.navigate("profile", { token: route.params.token })
+      }}>
+        <Profile width={32} height={32} color={colors.tint} />
       </TouchableOpacity>
 
-      <BookSlot name="John" onPress={() => {
-
-      }} />
+      {/* <BookSlot name="John" onPress={() => {}} /> */}
 
       {/* <EditSlot
         name="John"

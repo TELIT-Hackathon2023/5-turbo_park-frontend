@@ -29,12 +29,12 @@ const SlotScreen = ({
           <View style={styles.status} />
 
           <View style={styles.info}>
-            {route.params.fromHour && route.params.toHour && (
-              <Text>
-                `${route.params.fromHour}:${route.params.toHour}`
+            <Text style={styles.text}>Status</Text>
+            {route.params.fromHour && (
+              <Text style={styles.time}>
+                {`${route.params.fromHour}:00 - ${route.params.toHour}:00`}
               </Text>
             )}
-            <Text>Status</Text>
           </View>
         </View>
 
@@ -54,14 +54,17 @@ const styles = StyleSheet.create({
   container: {
     marginHorizontal: 20,
   },
-  slot: {
-    fontSize: 22,
+  text: {
+    fontSize: 18,
     fontWeight: "bold",
+  },
+  time: {
+    fontSize: 16,
   },
   row: {
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 10
+    marginTop: 10,
   },
   info: {
     marginLeft: 10,

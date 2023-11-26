@@ -8,6 +8,7 @@ import {
   Text,
   TouchableOpacity,
   Touchable,
+  ActivityIndicator,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import NavigationBar from "../components/NavigationBar";
@@ -21,6 +22,9 @@ import {
 } from "@gorhom/bottom-sheet";
 import { useColors } from "../constants/Colors";
 import { useEffect, useState } from "react";
+import { Employee } from "../types/Employee";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import SignOut from "../assets/sign_out.svg"
 
 const ProfileScreen = ({
   route,
@@ -28,17 +32,53 @@ const ProfileScreen = ({
 }: BottomSheetScreenProps<SheetParams, "profile">) => {
   const safeAreaInsets = useSafeAreaInsets();
   const colors = useColors();
-  const [username, setUsername] = useState<string>();
-  const [phoneNumber, setPhoneNumber] = useState<string>();
+
   const [emailAddress, setEmailAddres] = useState<string>();
+  const [username, setUsername] = useState<string>();
   const [identifier, setIdentifier] = useState<string>();
+  const [phoneNumber, setPhoneNumber] = useState<string>();
   const [plates, setPlates] = useState<string[]>([""]);
+
+  useEffect(() => {
+    fetch(`http://147.232.155.76:8080/employee/${route.params.token}`)
+      .then((response) => response.json() as Promise<Employee>)
+      .then((employee) => {
+        console.log({ employee });
+        setEmailAddres(employee.email);
+        setUsername(`${employee.name} ${employee.surname}`);
+        setIdentifier(`${employee.personalId}`);
+        setPhoneNumber(employee.phoneNumber);
+        setPlates([employee.licencePlateNumber]);
+      })
+      .catch(console.log);
+  }, []);
 
   const addPlateAction = () => {
     setPlates([...plates, ""]);
   };
 
-  const saveAction = () => {};
+  const saveAction = () => {
+    fetch(`http://147.232.155.76:8080/employee/${route.params.token}`, {
+      method: "PUT",
+      body: JSON.stringify({
+        phoneNumber: phoneNumber,
+        licencePlateNumber: plates[0] ?? "",
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then((response) => {
+      if (!response.ok) {
+        console.log(`user update failed: ${response}`)
+        return;
+      }
+      navigation.goBack();
+    });
+  };
+
+  if (!username) {
+    return <ActivityIndicator color={colors.tint} />;
+  }
 
   return (
     <>
@@ -48,6 +88,11 @@ const ProfileScreen = ({
           navigation.goBack();
         }}
         LeftButtonIcon={Back}
+        rightButtonAction={() => {
+          AsyncStorage.setItem("token", "");
+          navigation.navigate("signIn");
+        }}
+        RightButtonIcon={SignOut}
       />
 
       <BottomSheetScrollView
@@ -55,19 +100,48 @@ const ProfileScreen = ({
         contentContainerStyle={{ paddingBottom: safeAreaInsets.bottom + 100 }}
       >
         <TextInput
-          style={[styles.input, { backgroundColor: colors.gray }]}
+          style={[
+            styles.input,
+            { backgroundColor: colors.gray, color: colors.secondaryText },
+          ]}
           selectionColor={colors.tint}
           value={emailAddress}
           onChangeText={setEmailAddres}
           placeholder="Email Address"
+          autoCorrect={false}
+          autoCapitalize="none"
+          autoComplete="off"
+          editable={false}
         />
 
         <TextInput
-          style={[styles.input, { backgroundColor: colors.gray }]}
+          style={[
+            styles.input,
+            { backgroundColor: colors.gray, color: colors.secondaryText },
+          ]}
           selectionColor={colors.tint}
           value={username}
           onChangeText={setUsername}
           placeholder="Full Name"
+          autoCorrect={false}
+          autoCapitalize="none"
+          autoComplete="off"
+          editable={false}
+        />
+
+        <TextInput
+          style={[
+            styles.input,
+            { backgroundColor: colors.gray, color: colors.secondaryText },
+          ]}
+          selectionColor={colors.tint}
+          value={identifier}
+          onChangeText={setIdentifier}
+          placeholder="Identifier"
+          autoCorrect={false}
+          autoCapitalize="none"
+          autoComplete="off"
+          editable={false}
         />
 
         <TextInput
@@ -77,14 +151,9 @@ const ProfileScreen = ({
           onChangeText={setPhoneNumber}
           placeholder="Phone Number"
           keyboardType="numeric"
-        />
-
-        <TextInput
-          style={[styles.input, { backgroundColor: colors.gray }]}
-          selectionColor={colors.tint}
-          value={identifier}
-          onChangeText={setIdentifier}
-          placeholder="Identifier"
+          autoCorrect={false}
+          autoCapitalize="none"
+          autoComplete="off"
         />
 
         <Text style={styles.title}>License Plates</Text>
@@ -103,6 +172,9 @@ const ProfileScreen = ({
                   setPlates(updatedPlates);
                 }}
                 placeholder="Plate Number"
+                autoCorrect={false}
+                autoCapitalize="none"
+                autoComplete="off"
               />
             );
           })}

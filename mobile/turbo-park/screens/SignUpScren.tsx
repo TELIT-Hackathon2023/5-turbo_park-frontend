@@ -41,7 +41,27 @@ const SignUpScren = ({
     setPlates([...plates, ""]);
   };
 
-  const signUp = () => {};
+  const signUp = async () => {
+    await fetch("http://147.232.155.76:8080/employee/register", {
+      method: "POST",
+      body: JSON.stringify({
+        email: emailAddress,
+        password: password,
+        name: username?.split(" ")[0] ?? "",
+        surname: username?.split(" ")[1] ?? "",
+        phoneNumber: phoneNumber,
+        personalId: Number(identifier),
+        licencePlateNumber: plates[0] ?? "",
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then((response) => {
+      if (response.ok) {
+        navigation.goBack();
+      }
+    });
+  };
 
   return (
     <>
@@ -61,6 +81,9 @@ const SignUpScren = ({
           value={emailAddress}
           onChangeText={setEmailAddres}
           placeholder="Email Address"
+          autoCorrect={false}
+          autoCapitalize="none"
+          autoComplete="off"
         />
 
         <TextInput
@@ -69,6 +92,9 @@ const SignUpScren = ({
           value={password}
           onChangeText={setPassword}
           placeholder="Password"
+          autoCorrect={false}
+          autoCapitalize="none"
+          autoComplete="off"
           secureTextEntry={true}
         />
 
@@ -78,6 +104,9 @@ const SignUpScren = ({
           value={username}
           onChangeText={setUsername}
           placeholder="Full Name"
+          autoCorrect={false}
+          autoCapitalize="none"
+          autoComplete="off"
         />
 
         <TextInput
@@ -86,6 +115,9 @@ const SignUpScren = ({
           value={phoneNumber}
           onChangeText={setPhoneNumber}
           placeholder="Phone Number"
+          autoCorrect={false}
+          autoCapitalize="none"
+          autoComplete="off"
           keyboardType="numeric"
         />
 
@@ -95,6 +127,9 @@ const SignUpScren = ({
           value={identifier}
           onChangeText={setIdentifier}
           placeholder="Identifier"
+          autoCorrect={false}
+          autoCapitalize="none"
+          autoComplete="off"
         />
 
         <Text style={styles.title}>License Plates</Text>
@@ -113,6 +148,9 @@ const SignUpScren = ({
                   setPlates(updatedPlates);
                 }}
                 placeholder="Plate Number"
+                autoCorrect={false}
+                autoCapitalize="none"
+                autoComplete="off"
               />
             );
           })}

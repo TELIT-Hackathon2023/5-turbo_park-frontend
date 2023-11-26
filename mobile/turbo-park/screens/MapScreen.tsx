@@ -5,6 +5,7 @@ import { ActivityIndicator, StyleSheet, TouchableOpacity } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { SheetParams } from "../types/SheetParams";
 import { useColors } from "../constants/Colors";
+import MapSlots from "../components/MapSlots";
 
 Mapbox.setAccessToken(
   "pk.eyJ1IjoibnBzbG92ZW5za3lyYWoiLCJhIjoiY2trZm14aWpuMHZjbDJxcXRxa3ltbnNpZiJ9.Vf8AdcK9odZlcLxYU18XtQ"
@@ -45,7 +46,7 @@ const MapScreen = ({
           },
         }}
       />
-
+      <MapSlots onPress={(feature) => console.log({feature})} />
     </MapView>
   );
 };

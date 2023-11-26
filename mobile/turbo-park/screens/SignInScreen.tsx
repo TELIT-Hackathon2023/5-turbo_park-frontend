@@ -15,6 +15,7 @@ import { SheetParams } from "../types/SheetParams";
 import NavigationBar from "../components/NavigationBar";
 import { useColors } from "../constants/Colors";
 import { useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const SignInScreen = ({
   route,
@@ -24,13 +25,41 @@ const SignInScreen = ({
   const [emailAddress, setEmailAddres] = useState<string>();
   const [password, setPassword] = useState<string>();
 
-  const signIn = () => {
+  const storeUserToken = async (token: number) => {
+    try {
+      await AsyncStorage.setItem("token", token.toString());
+      navigation.navigate("landing", { token });
+    } catch (e) {
+      console.log({ e });
+    }
+  };
 
+  const signIn = async () => {
+    await fetch("http://147.232.155.76:8080/employee/login", {
+      method: "POST",
+      body: JSON.stringify({
+        email: emailAddress,
+        password: password,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then((response) => {
+      if (!response.ok) {
+        console.log({response})
+        return;
+      }
+      response.json().then((value) => {
+        const token = value.token;
+        console.log(`received token: ${token}`);
+        storeUserToken(token);
+      });
+    });
   };
 
   const signUp = () => {
-    navigation.navigate("signUp")
-  }
+    navigation.navigate("signUp");
+  };
 
   return (
     <>
@@ -46,6 +75,9 @@ const SignInScreen = ({
         value={emailAddress}
         onChangeText={setEmailAddres}
         placeholder="Email Address"
+        autoCorrect={false}
+        autoCapitalize="none"
+        autoComplete="off"
       />
 
       <TextInput
@@ -54,6 +86,9 @@ const SignInScreen = ({
         value={password}
         onChangeText={setPassword}
         placeholder="Password"
+        autoCorrect={false}
+        autoCapitalize="none"
+        autoComplete="off"
         secureTextEntry={true}
       />
 
