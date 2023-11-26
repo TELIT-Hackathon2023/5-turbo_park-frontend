@@ -16,9 +16,13 @@ const SlotScreen = ({
   navigation,
 }: BottomSheetScreenProps<SheetParams, "slot">) => {
   const colors = useColors();
-  
+
   const report = () => {
-    navigation.navigate("report", { slotId: route.params.id })
+    navigation.navigate("report", { slotId: route.params.id });
+  };
+  
+  const book = () => {
+    
   }
 
   return (
@@ -53,6 +57,15 @@ const SlotScreen = ({
             onPress={report}
           >
             <Text style={styles.buttonText}>Report Vehicle</Text>
+          </TouchableOpacity>
+        )}
+
+        {route.params.status === "FREE" && (
+          <TouchableOpacity
+            style={[styles.button, { backgroundColor: colors.tint }]}
+            onPress={book}
+          >
+            <Text style={styles.buttonText}>Book</Text>
           </TouchableOpacity>
         )}
       </View>

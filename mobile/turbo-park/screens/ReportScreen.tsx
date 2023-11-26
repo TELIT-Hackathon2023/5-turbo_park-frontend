@@ -45,7 +45,7 @@ const ReportScreen = ({
       </Text>
 
       <Text style={[styles.subtitle, { color: colors.secondaryText }]}>
-        Report him!
+        Report it!
       </Text>
 
       <TextInput

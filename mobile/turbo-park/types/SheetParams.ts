@@ -15,4 +15,5 @@ export type SheetParams = {
   editBooking: { token: number; id: number };
   profile: { token: number };
   report: { slotId: number };
+  availableSlots: { token: number; startDate: Date; endDate: Date };
 };

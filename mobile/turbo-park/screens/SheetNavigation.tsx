@@ -16,6 +16,7 @@ import DateScreen, { dateSheetOptions } from "./DateScreen";
 import SlotScreen, { slotSheetOptions } from "./SlotScreen";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ReportScreen, { reportSheetOptions } from "./ReportScreen";
+import AvailableSlotsScreen, { availableSlotsSheetOptions } from "./AvailableSlotsScreen";
 
 const Sheet = createBottomSheetNavigator<SheetParams>();
 
@@ -81,6 +82,11 @@ const SheetNavigation = () => {
           name="report"
           component={ReportScreen}
           options={reportSheetOptions}
+        />
+        <Sheet.Screen 
+          name="availableSlots"
+          component={AvailableSlotsScreen}
+          options={availableSlotsSheetOptions}
         />
       </Sheet.Navigator>
     </NavigationContainer>

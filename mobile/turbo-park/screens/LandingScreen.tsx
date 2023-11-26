@@ -64,7 +64,7 @@ const LandingScreen = ({
         <Profile width={32} height={32} color={colors.tint} />
       </TouchableOpacity>
 
-      {employeeTicket && (
+      {employeeTicket?.id !== undefined && (
         <EditSlot
           name={employee.name}
           slotId={employeeTicket.parkingSlotID}
@@ -72,7 +72,16 @@ const LandingScreen = ({
           toTime={employeeTicket.endDate}
           plate={employee.licencePlateNumber}
           onPress={() => {
-            console.log("edit")
+            console.log("edit");
+          }}
+        />
+      )}
+
+      {employeeTicket?.id === undefined && (
+        <BookSlot
+          name={employee.name}
+          onPress={() => {
+            navigation.navigate("date", { token: route.params.token });
           }}
         />
       )}
@@ -99,25 +108,27 @@ const styles = StyleSheet.create({
   logo: {
     width: 64,
     height: 64,
+    marginTop: 20
   },
   profileButton: {
     position: "absolute",
     right: 20,
-    top: 0,
+    top: 20,
   },
 });
 
 export const landingSheetOptions: BottomSheetNavigationOptions = {
   index: 0,
-  snapPoints: ["35%"],
+  snapPoints: ["30%"],
+  handleComponent: () => null,
   backgroundComponent: (props) => <SheetBackground {...props} rounded={true} />,
-  backdropComponent: (props) => (
-    <BottomSheetBackdrop
-      {...props}
-      enableTouchThrough={true}
-      appearsOnIndex={2}
-      disappearsOnIndex={1}
-      pressBehavior="collapse"
-    />
-  ),
+  // backdropComponent: (props) => (
+  //   <BottomSheetBackdrop
+  //     {...props}
+  //     enableTouchThrough={true}
+  //     appearsOnIndex={2}
+  //     disappearsOnIndex={1}
+  //     pressBehavior="collapse"
+  //   />
+  // ),
 };

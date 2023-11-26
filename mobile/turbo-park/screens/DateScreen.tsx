@@ -17,6 +17,8 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { useColors } from "../constants/Colors";
 import Calendar from "../assets/calendar.svg";
 import Clock from "../assets/clock.svg";
+import NavigationBar from "../components/NavigationBar";
+import Back from "../assets/back.svg";
 
 const DateScreen = ({
   route,
@@ -60,7 +62,17 @@ const DateScreen = ({
   };
 
   const search = () => {
-    console.log("Search");
+    const startDate = new Date(day);
+    startDate.setHours(fromHour);
+
+    const endDate = new Date(day);
+    endDate.setHours(toHour);
+
+    navigation.navigate("availableSlots", {
+      token: route.params.token,
+      startDate,
+      endDate,
+    });
   };
 
   const [day, setDay] = useState(getMinDay());
@@ -73,62 +85,68 @@ const DateScreen = ({
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Pick a date</Text>
+    <>
+      <NavigationBar
+        title={"Pick a date"}
+        leftButtonAction={() => navigation.goBack()}
+        LeftButtonIcon={Back}
+      />
 
-      <View style={styles.dateContainer}>
-        <Calendar height={32} width={32} color={colors.tint} />
-        <Text style={styles.subtitle}>Day</Text>
+      <View style={styles.container}>
+        <View style={styles.dateContainer}>
+          <Calendar height={32} width={32} color={colors.tint} />
+          <Text style={styles.subtitle}>Day</Text>
 
-        <DateTimePicker
-          mode="date"
-          value={day}
-          minimumDate={getMinDay()}
-          maximumDate={getMaxDay()}
-          onChange={(event) => {
-            setDay(new Date(event.nativeEvent.timestamp));
-          }}
-        />
+          <DateTimePicker
+            mode="date"
+            value={day}
+            minimumDate={getMinDay()}
+            maximumDate={getMaxDay()}
+            onChange={(event) => {
+              setDay(new Date(event.nativeEvent.timestamp));
+            }}
+          />
+        </View>
+
+        <View style={styles.hourInputs}>
+          <Clock height={32} width={32} color={colors.tint} />
+          <Text style={styles.subtitle}>Time</Text>
+
+          <TextInput
+            style={[styles.input, { backgroundColor: colors.gray }]}
+            selectionColor={colors.tint}
+            keyboardType="numeric"
+            value={`${fromHour}`}
+            onChangeText={(text) => {
+              const number = fixUserInput(text);
+              if (!number) return;
+              setFromHour(number);
+            }}
+          />
+
+          <Text> - </Text>
+
+          <TextInput
+            style={[styles.input, { backgroundColor: colors.gray }]}
+            selectionColor={colors.tint}
+            keyboardType="numeric"
+            value={`${toHour}`}
+            onChangeText={(text) => {
+              const number = Number(text);
+              if (!number) return;
+              setToHour(number);
+            }}
+          />
+        </View>
+
+        <TouchableOpacity
+          style={[styles.button, { backgroundColor: colors.tint }]}
+          // onPress={search}
+        >
+          <Text style={styles.buttonText}>Search</Text>
+        </TouchableOpacity>
       </View>
-
-      <View style={styles.hourInputs}>
-        <Clock height={32} width={32} color={colors.tint} />
-        <Text style={styles.subtitle}>Time</Text>
-
-        <TextInput
-          style={[styles.input, { backgroundColor: colors.gray }]}
-          selectionColor={colors.tint}
-          keyboardType="numeric"
-          value={`${fromHour}`}
-          onChangeText={(text) => {
-            const number = fixUserInput(text);
-            if (!number) return;
-            setFromHour(number);
-          }}
-        />
-
-        <Text> - </Text>
-
-        <TextInput
-          style={[styles.input, { backgroundColor: colors.gray }]}
-          selectionColor={colors.tint}
-          keyboardType="numeric"
-          value={`${toHour}`}
-          onChangeText={(text) => {
-            const number = Number(text);
-            if (!number) return;
-            setToHour(number);
-          }}
-        />
-      </View>
-
-      <TouchableOpacity
-        style={[styles.button, { backgroundColor: colors.tint }]}
-        onPress={search}
-      >
-        <Text style={styles.buttonText}>Search</Text>
-      </TouchableOpacity>
-    </View>
+    </>
   );
 };
 
@@ -138,6 +156,7 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: "center",
     marginHorizontal: 20,
+    marginTop: 10,
     gap: 15,
   },
   dateContainer: {
@@ -179,13 +198,13 @@ export const dateSheetOptions: BottomSheetNavigationOptions = {
   index: 0,
   snapPoints: ["30%"],
   backgroundComponent: (props) => <SheetBackground {...props} rounded={true} />,
-  backdropComponent: (props) => (
-    <BottomSheetBackdrop
-      {...props}
-      enableTouchThrough={true}
-      appearsOnIndex={2}
-      disappearsOnIndex={1}
-      pressBehavior="collapse"
-    />
-  ),
+  // backdropComponent: (props) => (
+  //   <BottomSheetBackdrop
+  //     {...props}
+  //     enableTouchThrough={true}
+  //     appearsOnIndex={-1}
+  //     disappearsOnIndex={-1}
+  //     pressBehavior="collapse"
+  //   />
+  // ),
 };

@@ -12,7 +12,7 @@ const BookSlot = ({ name, onPress }: BookSlotProps) => {
   return (
     <View style={styles.container}>
       <Text style={[styles.titleText, { color: colors.text }]}>
-        Hey {name}!
+        Welcome back {name}! 👋
       </Text>
       <Text style={[styles.subtitleText, { color: colors.secondaryText }]}>
         You currently have no active bookings.
