@@ -48,7 +48,7 @@ function App() {
                 ],
               },
               properties: {
-                color: slot.status === "FREE" ? "green" : "red",
+                color: slot.status === "FREE" ? "green" : "orange",
               },
             })),
         };
@@ -93,15 +93,14 @@ function App() {
           {clickInfo  && (
           <div className='absolute top-0 z-50 float-left' style={{left: clickInfo.x, top: clickInfo.y}}>
             <div className=' bg-white m-2 h-fit rounded-xl p-10 flex flex-col gap-5 w-full text-center justify-start align-self-center shadow-lg'>
-                        {clickInfo.feature && clickInfo.feature.properties && clickInfo.feature.properties.color === "red" ? (
+                        {clickInfo.feature && clickInfo.feature.properties && clickInfo.feature.properties.color === "orange" ? (
                           <div className='gap-5 flex flex-col'>
-                            <span className="text-red-500 text-6xl material-symbols-rounded">directions_car</span>
+                            <span className="text-orange-500 text-6xl material-symbols-rounded">directions_car</span>
                             <div className="flex flex-col text-left">
-                                <p>Status: <span className="font-extrabold">free</span></p>
+                                <p>Status: <span className="font-extrabold">ocupied</span></p>
                                 <p>Id: <span className="font-extrabold">{clickInfo.feature.id}</span></p>
                             </div>
                             <scale-divider></scale-divider>
-                            <p className="font-extrabold">Available spaces</p>
                             <ScaleTextField
                                 placeholder="..."
                                 label="Report message"
@@ -114,8 +113,8 @@ function App() {
                           <div>
                             <span className="text-emerald-500 text-6xl material-symbols-rounded">directions_car</span>
                             <div className="flex flex-col text-left">
-                                <p>Status: <span className="font-extrabold">ocupidfd</span></p>
-                                <p>Id: <span className="font-extrabold">{clickInfo.feature.id}</span></p>
+                                <p>Status: <span className="font-extrabold">Free</span></p>
+                                <p>ID: <span className="font-extrabold">{clickInfo.feature.id}</span></p>
                             </div>
                           </div>
                         )
@@ -129,7 +128,7 @@ function App() {
         <div className=' bg-white m-8 h-fit rounded-3xl p-10 flex flex-col gap-5 w-full text-center justify-start align-self-center shadow-lg'>
           <scale-logo variant="magenta" transparent="true"></scale-logo>
           {screen === 'home' ? (
-            <BookNow updateScreen={updateScreen} selectedSpace={clickInfo}></BookNow>
+            <BookNow updateScreen={updateScreen} selectedSpace={clickInfo} setShape={setShape}></BookNow>
           ): screen === 'profile' ? (
             <Profile updateScreen={updateScreen}></Profile>
           ): screen === 'login' ? (

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { ScaleTextField } from "./scaleTextField";
 import { ScaleDatePicker } from "./scaleDatePicker";
 
-const BookNow = ({ updateScreen, selectedSpace }) => {
+const BookNow = ({ updateScreen, selectedSpace, setShape }) => {
     const [availableScreen, setAvailableScreen] = useState(false);
     const [user, setUser] = useState({
         email: "bob@example.com",
@@ -25,9 +25,11 @@ const BookNow = ({ updateScreen, selectedSpace }) => {
     const [timeTo, setTimeTo] = useState();
 
     const fetchUserTicketInfo = (userId) => {
+        setTicket(null)
         fetch("http://147.232.155.76:8080/ticket/user/" + userId)
             .then(resp => resp.json())
-            .then(json => setTicket(json));
+            .then(json => setTicket(json))
+            .catch(err => setTicket(null));;
     };
 
     const fetchUserInfo = (userId) => {
@@ -39,6 +41,87 @@ const BookNow = ({ updateScreen, selectedSpace }) => {
     const changeScreen = () => {
         updateScreen('profile');
     };
+
+    const getAvailableSpots = () => {
+        const startTime = new Date(new Date(date).getTime() + timeFrom * 60 * 60 * 1000).toISOString();
+        const endTime = new Date(new Date(date).getTime() + timeTo * 60 * 60 * 1000).toISOString();
+        console.log(startTime, endTime)
+                fetch("http://147.232.155.76:8080/parkingslot", {
+            method: "POST",
+            body: JSON.stringify({
+                startDate: startTime,
+                endDate: endTime
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }).then((response) => {
+          if (!response.ok) {
+            console.log({response})
+            return;
+          }
+          response.json().then((json) => {
+            console.log(json);
+            const shape = {
+                type: "FeatureCollection",
+                features: 
+                  json.map((slot) => ({
+                    type: "Feature",
+                    id: slot.id,
+                    geometry: {
+                      type: "Polygon",
+                      coordinates: [
+                        [
+                          slot.coordinate1,
+                          slot.coordinate2,
+                          slot.coordinate3,
+                          slot.coordinate4,
+                          slot.coordinate1,
+                        ],
+                      ],
+                    },
+                    properties: {
+                      color: slot.status === "FREE" ? "green" : "orange",
+                    },
+                  })),
+              };
+              setShape(shape);
+          });
+        });
+
+    }
+
+    const bookClick = () => {
+        const startTime = new Date(new Date(date).getTime() + timeFrom * 60 * 60 * 1000).toISOString();
+        const endTime = new Date(new Date(date).getTime() + timeTo * 60 * 60 * 1000).toISOString();
+        const req = {
+            employeeID: user.id,
+            parkingSlotID: selectedSpace.feature.id,
+            startDate: startTime,
+            endDate: endTime
+      }
+      console.log(req)
+        fetch("http://147.232.155.76:8080/ticket", {
+            method: "POST",
+            body: JSON.stringify(req),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }).then((response) => {
+          if (!response.ok) {
+            console.log({response})
+            return;
+          }
+          response.json().then((json) => {
+            console.log(json);
+          })
+        })
+    }
+
+    const Search = () => {
+        getAvailableSpots();
+        setAvailableScreen(true);
+    }
 
     useEffect(() => {
         const userId = localStorage.getItem("UserToken");
@@ -55,9 +138,9 @@ const BookNow = ({ updateScreen, selectedSpace }) => {
                 <span className="material-symbols-rounded bg-gray-200 h-fit p-2 text-pink-600 rounded-full cursor-pointer" onClick={changeScreen}>person</span>
             </div>
 
-            {ticket ? (
+            { ticket && ticket.id ? (
                 <div className="gap-2 flex flex-col">
-                    <p className="">You currently park at space <span className="font-extrabold">{ticket.id}</span></p>
+                    <p className="">You currently park at space <span className="font-extrabold">{ticket.parkingSlotID}</span></p>
                     <span className="text-emerald-500 text-6xl material-symbols-rounded">directions_car</span>
                     <p>{ticket.startDate} - {ticket.endDate}</p>
                     <p>{user.licencePlateNumber}</p>
@@ -65,10 +148,11 @@ const BookNow = ({ updateScreen, selectedSpace }) => {
                 </div>
             ) : (
                 <div className='gap-5 flex flex-col'>
+                    <p className="text-left">Book a parking for your next visit in the office</p>
                     <ScaleDatePicker
                         label="Select date"
                         value=""
-                        onScaleChange={(e) => console.log(e.detail.value)}
+                        onScaleChange={(e) => setDate(e.detail.value)}
                     ></ScaleDatePicker>
 
                     <div className="flex flex-row gap-2">
@@ -86,11 +170,13 @@ const BookNow = ({ updateScreen, selectedSpace }) => {
                         ></ScaleTextField>
                     </div>
 
+                    <scale-button onClick={Search}>Search</scale-button>
+
                     {availableScreen === true ? (
                         <div className="flex justify-between flex-col">
                             <scale-divider></scale-divider>
                             <p className="font-extrabold">Available spaces</p>
-                            <p className="font-light">Select available parking space in the map dfjakgjalksjv fklds</p>
+                            <p className="font-light">Select available parking space in the map</p>
                             <scale-divider></scale-divider>
                             <div className="flex flex-row gap-2">
                                 <span className="text-emerald-500 text-6xl material-symbols-rounded">directions_car</span>
@@ -99,14 +185,14 @@ const BookNow = ({ updateScreen, selectedSpace }) => {
                                     <p>Time: <span className="font-extrabold">{timeFrom} - {timeTo}</span></p>
                                 </div>
                             </div>
+                            <scale-button onClick={bookClick}>Book</scale-button>
                         </div>
+                        
                     ) : (
                         <div>
                             {/* Placeholder for content when availableScreen is false */}
                         </div>
                     )}
-
-                    <scale-button onClick={() => setAvailableScreen(true)}>{ availableScreen ? "Book" : "Search"}</scale-button>
                 </div>
             )}
         </div>
