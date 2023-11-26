@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { ScaleTextField } from "./scaleTextField";
 
 const Register = ({ updateScreen }) => {
     const [state, setState] = useState({
@@ -47,58 +48,89 @@ const Register = ({ updateScreen }) => {
       updateScreen(screen);
     };
 
+    const register = async () => {
+        console.log(state);
+
+        const employeeCreate = {
+            name: state.name.split(" ")[0],
+            surname: state.name.split(" ")[1],
+            phoneNumber: state.number,
+            personalId: Number(state.personalNumber),
+            licencePlateNumber: state.licensePlates[0].value,
+            email: state.email,
+            password: state.password
+        }
+
+        console.log(employeeCreate);
+
+        await fetch("http://147.232.155.76:8080/employee/register", {
+            method: "POST",
+            body: JSON.stringify({employeeCreate}),
+            headers: {"Content-Type": "application/json",},
+        }).then((response) => {
+            if (response.ok) {
+                console.log("Register succesfull");
+                changeScreen('login');
+            }
+        });
+    }
+
     return (
         <div className="flex flex-col gap-5">
              <p className="font-extrabold text-4xl">Register</p>
 
-            <scale-text-field
+            <ScaleTextField
                 placeholder="your name"
                 label="Name"
                 value={state.name}
-                onChange={(e) => handleChange("name", e.target.value)}
-            ></scale-text-field>
-            <scale-text-field
+                onScaleChange={(e) => handleChange("name", e.detail.value)}
+            ></ScaleTextField>
+            <ScaleTextField
                 placeholder="Number"
                 label="number"
+                type="number"
                 value={state.number}
-                onChange={(e) => handleChange("number", e.target.value)}
-            ></scale-text-field>
-            <scale-text-field
+                onScaleChange={(e) => handleChange("number", e.detail.value)}
+            ></ScaleTextField>
+            <ScaleTextField
                 placeholder="your email"
                 label="Email"
+                type="email"
                 value={state.email}
-                onChange={(e) => handleChange("email", e.target.value)}
-            ></scale-text-field>
-            <scale-text-field
+                onScaleChange={(e) => handleChange("email", e.detail.value)}
+            ></ScaleTextField>
+            <ScaleTextField
                 placeholder="your password"
                 label="Password"
                 type="password"
                 value={state.password}
-                onChange={(e) => handleChange("email", e.target.value)}
-            ></scale-text-field>
-            <scale-text-field
+                onScaleChange={(e) => handleChange("password", e.detail.value)}
+            ></ScaleTextField>
+            <ScaleTextField
                 placeholder="your password again"
                 label="Password again"
                 type="password"
                 value={state.passwordAgain}
-                onChange={(e) => handleChange("email", e.target.value)}
-            ></scale-text-field>
-            <scale-text-field
+                onScaleChange={(e) => handleChange("passwordAgain", e.detail.value)}
+            ></ScaleTextField>
+            <ScaleTextField
                 placeholder="your personal number"
                 label="Personal number"
+                type="number"
                 value={state.personalNumber}
-                onChange={(e) => handleChange("personalNumber", e.target.value)}
-            ></scale-text-field>
+                onScaleChange={(e) => handleChange("personalNumber", e.detail.value)}
+            ></ScaleTextField>
 
             <p className="font-extrabold">License plates</p>
             {state.licensePlates.map((plate) => (
-                <scale-text-field
+                <ScaleTextField
                     key={plate.id}
                     placeholder={plate.placeholder}
                     label={plate.label}
                     value={plate.value}
-                    onChange={(e) => handleLicensePlateChange(plate.id, e.target.value)}
-                ></scale-text-field>
+                    type="number"
+                    onScaleChange={(e) => handleLicensePlateChange(plate.id, e.detail.value)}
+                ></ScaleTextField>
             ))}
             <button
                 className="text-emerald-500 flex flex-row justify-center align-items-center gap-2"
@@ -106,8 +138,8 @@ const Register = ({ updateScreen }) => {
             >
                 <span className=" material-symbols-rounded">add</span>add licence plate
             </button>
-            <scale-button onClick={() => console.log(state)}>Register</scale-button>
-
+            <scale-button onClick={register}>Register</scale-button>
+            <scale-divider></scale-divider>
             <div>
                 <p>Already a member ?</p>
                 <p className="text-pink-600" onClick={() => changeScreen('login')}>Log in</p>
