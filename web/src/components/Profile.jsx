@@ -1,16 +1,43 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { ScaleTextField } from "./scaleTextField";
 
 const Profile = ({ updateScreen }) => {
-    const [state, setState] = useState({
-        name: "",
-        number: "",
-        email: "",
-        personalNumber: "",
-        licensePlates: [
-            { id: 1, placeholder: "your licence plate number", label: "Licence plate number", value: "" }
-        ],
-        nextLicensePlateId: 2,
+
+    const [user, setUser] = useState({
+        email: "bob@example.com",
+        id: 1,
+        licencePlateNumber: "KE456RI",
+        name: "Bob",
+        personalId: 123456,
+        phoneNumber: "+421000000000",
+        surname: "Bobers"
     });
+
+    const [state, setState] = useState({
+        personalNumber: user.phoneNumber,
+        licensePlates: [
+            { id: 1, placeholder: "your licence plate number", label: "Licence plate number", value: user.licencePlateNumber }
+        ],
+    });
+
+    const fetchUserInfo = (userId) => {
+        fetch("http://147.232.155.76:8080/employee/" + userId)
+            .then(resp => resp.json())
+            .then(json => setUser(json));
+    };
+
+    const fetchData = () => {
+        const userId = localStorage.getItem("UserToken");
+        if (userId) {
+            fetchUserInfo(userId);
+        }
+    }
+
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
 
     const handleChange = (field, value) => {
         setState((prev) => ({ ...prev, [field]: value }));
@@ -45,6 +72,30 @@ const Profile = ({ updateScreen }) => {
       updateScreen(screen);
     };
 
+    const updateUser = () => {
+        const req = {
+            phoneNumber: state.number,
+            licencePlateNumber: state.licensePlates[0].value
+        }
+
+        console.log(req);
+        fetch("http://147.232.155.76:8080/employee/" + user.id, {
+            method: "PUT",
+            body: JSON.stringify(req),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }).then((response) => {
+          if (!response.ok) {
+            console.log({response})
+            return;
+          }
+          response.json().then((json) => {
+            console.log(json);
+          })
+        })
+    }
+
     const logout = () => {
         localStorage.removeItem("UserToken");
         changeScreen('login')
@@ -57,40 +108,40 @@ const Profile = ({ updateScreen }) => {
                     <p className="font-extrabold">Profile</p>
                     <span className="material-symbols-rounded text-pink-600 " onClick={() => logout()}>logout</span>
                 </div>
-            <scale-text-field
+            <ScaleTextField
                 placeholder="your name"
                 label="Name"
-                value={state.name}
-                onChange={(e) => handleChange("name", e.target.value)}
-            ></scale-text-field>
-            <scale-text-field
+                value={user.name}
+                disabled
+            ></ScaleTextField>
+            <ScaleTextField
                 placeholder="Number"
                 label="number"
                 value={state.number}
-                onChange={(e) => handleChange("number", e.target.value)}
-            ></scale-text-field>
-            <scale-text-field
+                onScaleChange={(e) => handleChange("number", e.detail.value)}
+            ></ScaleTextField>
+            <ScaleTextField
                 placeholder="your email"
                 label="Email"
-                value={state.email}
-                onChange={(e) => handleChange("email", e.target.value)}
-            ></scale-text-field>
-            <scale-text-field
+                value={user.email}
+                disabled
+            ></ScaleTextField>
+            <ScaleTextField
                 placeholder="your personal number"
                 label="Personal number"
-                value={state.personalNumber}
-                onChange={(e) => handleChange("personalNumber", e.target.value)}
-            ></scale-text-field>
+                value={user.number}
+                disabled
+            ></ScaleTextField>
 
             <p className="font-extrabold">License plates</p>
             {state.licensePlates.map((plate) => (
-                <scale-text-field
+                <ScaleTextField
                     key={plate.id}
                     placeholder={plate.placeholder}
                     label={plate.label}
                     value={plate.value}
-                    onChange={(e) => handleLicensePlateChange(plate.id, e.target.value)}
-                ></scale-text-field>
+                    onScaleChange={(e) => handleLicensePlateChange(plate.id, e.detail.value)}
+                ></ScaleTextField>
             ))}
             <button
                 className="text-emerald-500 flex flex-row justify-center align-items-center gap-2"
@@ -98,7 +149,7 @@ const Profile = ({ updateScreen }) => {
             >
                 <span className=" material-symbols-rounded">add</span>add licence plate
             </button>
-            <scale-button onClick={() => console.log(state)}>Save</scale-button>
+            <scale-button onClick={updateUser}>Save</scale-button>
         </div>
     );
 };

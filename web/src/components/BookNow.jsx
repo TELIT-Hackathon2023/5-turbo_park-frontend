@@ -38,6 +38,14 @@ const BookNow = ({ updateScreen, selectedSpace, setShape }) => {
             .then(json => setUser(json));
     };
 
+    const fetchData = () => {
+        const userId = localStorage.getItem("UserToken");
+        if (userId) {
+            fetchUserInfo(userId);
+            fetchUserTicketInfo(userId);
+        }
+    }
+
     const changeScreen = () => {
         updateScreen('profile');
     };
@@ -116,6 +124,11 @@ const BookNow = ({ updateScreen, selectedSpace, setShape }) => {
             console.log(json);
           })
         })
+        fetchData()
+    }
+
+    const edit = () => {
+        setAvailableScreen(true)
     }
 
     const Search = () => {
@@ -124,11 +137,7 @@ const BookNow = ({ updateScreen, selectedSpace, setShape }) => {
     }
 
     useEffect(() => {
-        const userId = localStorage.getItem("UserToken");
-        if (userId) {
-            fetchUserInfo(userId);
-            fetchUserTicketInfo(userId);
-        }
+        fetchData();
     }, []);
 
     return (
@@ -144,7 +153,7 @@ const BookNow = ({ updateScreen, selectedSpace, setShape }) => {
                     <span className="text-emerald-500 text-6xl material-symbols-rounded">directions_car</span>
                     <p>{ticket.startDate} - {ticket.endDate}</p>
                     <p>{user.licencePlateNumber}</p>
-                    <scale-button>Edit</scale-button>
+                    <scale-button onClick={edit}>Edit</scale-button>
                 </div>
             ) : (
                 <div className='gap-5 flex flex-col'>
