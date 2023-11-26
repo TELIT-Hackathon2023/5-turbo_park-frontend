@@ -16,6 +16,10 @@ const SlotScreen = ({
   navigation,
 }: BottomSheetScreenProps<SheetParams, "slot">) => {
   const colors = useColors();
+  
+  const report = () => {
+    navigation.navigate("report", { slotId: route.params.id })
+  }
 
   return (
     <>
@@ -46,6 +50,7 @@ const SlotScreen = ({
         {route.params.status !== "FREE" && (
           <TouchableOpacity
             style={[styles.button, { backgroundColor: colors.red }]}
+            onPress={report}
           >
             <Text style={styles.buttonText}>Report Vehicle</Text>
           </TouchableOpacity>

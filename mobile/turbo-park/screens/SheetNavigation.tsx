@@ -15,6 +15,7 @@ import ProfileScreen, { profileSheetOptions } from "./ProfileScreen";
 import DateScreen, { dateSheetOptions } from "./DateScreen";
 import SlotScreen, { slotSheetOptions } from "./SlotScreen";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import ReportScreen, { reportSheetOptions } from "./ReportScreen";
 
 const Sheet = createBottomSheetNavigator<SheetParams>();
 
@@ -27,8 +28,8 @@ const SheetNavigation = () => {
       onReady={async () => {
         const token = await AsyncStorage.getItem("token");
         if (token) {
-          console.log(`Loaded token: ${token}`)
-          navigationRef.navigate("landing", { token: Number(token)});
+          console.log(`Loaded token: ${token}`);
+          navigationRef.navigate("landing", { token: Number(token) });
         } else {
           console.log("Could not load token");
           navigationRef.navigate("signIn");
@@ -75,6 +76,11 @@ const SheetNavigation = () => {
           name="profile"
           component={ProfileScreen}
           options={profileSheetOptions}
+        />
+        <Sheet.Screen
+          name="report"
+          component={ReportScreen}
+          options={reportSheetOptions}
         />
       </Sheet.Navigator>
     </NavigationContainer>
