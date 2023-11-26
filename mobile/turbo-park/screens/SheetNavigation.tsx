@@ -49,7 +49,10 @@ const SheetNavigation = () => {
           enablePanDownToClose: false,
         }}
       >
-        <Sheet.Screen name="map" component={MapScreen} />
+        <Sheet.Screen name="map">
+          {props => <MapScreen {...props} />}
+        </Sheet.Screen>
+
         <Sheet.Screen
           name="signIn"
           component={SignInScreen}
