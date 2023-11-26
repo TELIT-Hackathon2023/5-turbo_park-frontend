@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { ScaleTextField } from "./scaleTextField";
+import { ScaleDatePicker } from "./scaleDatePicker";
 
 const BookNow = ({ updateScreen, selectedSpace }) => {
-    const [availableScreen, setAvailableScreen] = useState(true);
+    const [availableScreen, setAvailableScreen] = useState(false);
     const [user, setUser] = useState({
         email: "bob@example.com",
         id: 1,
@@ -24,16 +25,16 @@ const BookNow = ({ updateScreen, selectedSpace }) => {
     const [timeTo, setTimeTo] = useState();
 
     const fetchUserTicketInfo = (userId) => {
-      fetch("http://147.232.155.76:8080/ticket/user/" + userId)
-        .then(resp => resp.json())
-        .then(json => setTicket(json))
-    }
-  
+        fetch("http://147.232.155.76:8080/ticket/user/" + userId)
+            .then(resp => resp.json())
+            .then(json => setTicket(json));
+    };
+
     const fetchUserInfo = (userId) => {
-      fetch("http://147.232.155.76:8080/employee/" + userId)
-        .then(resp => resp.json())
-        .then(json => setUser(json))
-    }
+        fetch("http://147.232.155.76:8080/employee/" + userId)
+            .then(resp => resp.json())
+            .then(json => setUser(json));
+    };
 
     const changeScreen = () => {
         updateScreen('profile');
@@ -41,10 +42,10 @@ const BookNow = ({ updateScreen, selectedSpace }) => {
 
     useEffect(() => {
         const userId = localStorage.getItem("UserToken");
-        if (userId){
+        if (userId) {
             fetchUserInfo(userId);
             fetchUserTicketInfo(userId);
-        }   
+        }
     }, []);
 
     return (
@@ -54,20 +55,21 @@ const BookNow = ({ updateScreen, selectedSpace }) => {
                 <span className="material-symbols-rounded bg-gray-200 h-fit p-2 text-pink-600 rounded-full cursor-pointer" onClick={changeScreen}>person</span>
             </div>
 
-            {!ticket ? (
+            {ticket ? (
                 <div className="gap-2 flex flex-col">
-                    <p className="">You currently park at space <span className="font-extrabold">{ ticket.id }</span></p>
+                    <p className="">You currently park at space <span className="font-extrabold">{ticket.id}</span></p>
                     <span className="text-emerald-500 text-6xl material-symbols-rounded">directions_car</span>
-                    <p>{ ticket.startDate } - {ticket.endDate}</p>
-                    <p>{ user.licencePlateNumber }</p>
+                    <p>{ticket.startDate} - {ticket.endDate}</p>
+                    <p>{user.licencePlateNumber}</p>
                     <scale-button>Edit</scale-button>
                 </div>
             ) : (
                 <div className='gap-5 flex flex-col'>
-                    <scale-date-picker
+                    <ScaleDatePicker
                         label="Select date"
-                        value={new Date()}
-                    ></scale-date-picker>
+                        value=""
+                        onScaleChange={(e) => console.log(e.detail.value)}
+                    ></ScaleDatePicker>
 
                     <div className="flex flex-row gap-2">
                         <ScaleTextField
@@ -84,7 +86,8 @@ const BookNow = ({ updateScreen, selectedSpace }) => {
                         ></ScaleTextField>
                     </div>
 
-                    <div className="flex justify-between flex-col">
+                    {availableScreen === true ? (
+                        <div className="flex justify-between flex-col">
                             <scale-divider></scale-divider>
                             <p className="font-extrabold">Available spaces</p>
                             <p className="font-light">Select available parking space in the map dfjakgjalksjv fklds</p>
@@ -96,13 +99,18 @@ const BookNow = ({ updateScreen, selectedSpace }) => {
                                     <p>Time: <span className="font-extrabold">{timeFrom} - {timeTo}</span></p>
                                 </div>
                             </div>
-                    </div>
+                        </div>
+                    ) : (
+                        <div>
+                            {/* Placeholder for content when availableScreen is false */}
+                        </div>
+                    )}
 
-                    <scale-button>Continue</scale-button>
+                    <scale-button onClick={() => setAvailableScreen(true)}>{ availableScreen ? "Book" : "Search"}</scale-button>
                 </div>
             )}
         </div>
-    )
+    );
 };
 
 export default BookNow;

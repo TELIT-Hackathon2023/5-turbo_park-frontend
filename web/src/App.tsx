@@ -7,11 +7,13 @@ import BookNow from './components/BookNow';
 import Login from './components/Login';
 import Register from './components/Register';
 import { dataLayer } from './components/mapstyle';
+import { ScaleTextField } from './components/scaleTextField';
 
 function App() {
   const [screen, setScreen] = useState<string>('');
   const [clickInfo, setClickInfo] = useState(null);
   const [shape, setShape] = useState(null);
+  const [report, setReport] = useState(null);
 
   const checkUserLogin = () => {
     const user = localStorage.getItem("UserToken");
@@ -66,7 +68,7 @@ function App() {
         point: {x, y}
       } = event;
       const hoveredFeature = features && features[0];
-      console.log(hoveredFeature && {feature: hoveredFeature, x, y});
+      console.log(features && features[0])
       setClickInfo(hoveredFeature && {feature: hoveredFeature, x, y});
   }, []);
 
@@ -88,15 +90,36 @@ function App() {
           <Source type="geojson" data={shape}>
             <Layer {...dataLayer} />
           </Source>
-          {clickInfo && (
+          {clickInfo  && (
           <div className='absolute top-0 z-50 float-left' style={{left: clickInfo.x, top: clickInfo.y}}>
             <div className=' bg-white m-2 h-fit rounded-xl p-10 flex flex-col gap-5 w-full text-center justify-start align-self-center shadow-lg'>
-                      <span className="text-emerald-500 text-6xl material-symbols-rounded">directions_car</span>
-                        <div className="flex flex-col text-left">
-                            <p>Status: <span className="font-extrabold">free</span></p>
-                            <p>Time: <span className="font-extrabold">9:00 - 11:00</span></p>
-                        </div>
-                        <scale-button>Book</scale-button>
+                        {clickInfo.feature && clickInfo.feature.properties && clickInfo.feature.properties.color === "red" ? (
+                          <div className='gap-5 flex flex-col'>
+                            <span className="text-red-500 text-6xl material-symbols-rounded">directions_car</span>
+                            <div className="flex flex-col text-left">
+                                <p>Status: <span className="font-extrabold">free</span></p>
+                                <p>Id: <span className="font-extrabold">{clickInfo.feature.id}</span></p>
+                            </div>
+                            <scale-divider></scale-divider>
+                            <p className="font-extrabold">Available spaces</p>
+                            <ScaleTextField
+                                placeholder="..."
+                                label="Report message"
+                                value={report}
+                                onScaleChange={(e) => setReport(e.detail.value)}
+                            ></ScaleTextField>
+                            <scale-button>Report</scale-button>
+                          </div>
+                        ) : (
+                          <div>
+                            <span className="text-emerald-500 text-6xl material-symbols-rounded">directions_car</span>
+                            <div className="flex flex-col text-left">
+                                <p>Status: <span className="font-extrabold">ocupidfd</span></p>
+                                <p>Id: <span className="font-extrabold">{clickInfo.feature.id}</span></p>
+                            </div>
+                          </div>
+                        )
+                      }
             </div>
           </div>
         )}
