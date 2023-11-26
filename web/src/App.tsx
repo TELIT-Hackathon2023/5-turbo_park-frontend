@@ -1,6 +1,6 @@
 // @ts-nocheck
-import React, { useState, useCallback } from 'react';
-import Map, {Source, Layer, GeoJSONLayer} from 'react-map-gl';
+import React, { useState, useCallback, useEffect } from 'react';
+import Map, {Source, Layer} from 'react-map-gl';
 import './App.css';
 import Profile from './components/Profile'
 import BookNow from './components/BookNow';
@@ -11,39 +11,53 @@ import { dataLayer } from './components/mapstyle';
 function App() {
   const [screen, setScreen] = useState<string>('');
   const [clickInfo, setClickInfo] = useState(null);
+  const [shape, setShape] = useState(null);
+
+  const checkUserLogin = () => {
+    const user = localStorage.getItem("UserToken");
+    if (user){
+      setScreen('home')
+    }
+  }
+
+  useEffect(() => {
+    // check user login
+    checkUserLogin()
+    /* global fetch */
+    fetch('http://147.232.155.76:8080/parkingslot/all')
+      .then(resp => resp.json())
+      .then((json) => {
+        const shape: GeoJSON.FeatureCollection = {
+          type: "FeatureCollection",
+          features: 
+            json.map((slot) => ({
+              type: "Feature",
+              id: slot.id,
+              geometry: {
+                type: "Polygon",
+                coordinates: [
+                  [
+                    slot.coordinate1,
+                    slot.coordinate2,
+                    slot.coordinate3,
+                    slot.coordinate4,
+                    slot.coordinate1,
+                  ],
+                ],
+              },
+              properties: {
+                color: slot.status === "FREE" ? "green" : "red",
+              },
+            })),
+        };
+        setShape(shape);
+      })
+      .catch(err => console.error('Could not load data', err)); // eslint-disable-line
+  }, []);
 
   // Function to update screen state
   const updateScreen = (newScreen) => {
     setScreen(newScreen);
-  };
-
-  // const style = {
-  //   fillColor: ["get", "color"],
-  //   fillOpacity: 0.7,
-  // };
-
-  const shape: GeoJSON.FeatureCollection = {
-    type: "FeatureCollection",
-    features: [
-      {
-        type: "Feature",
-        id: "1",
-        geometry: {
-          type: "Polygon",
-          coordinates: [
-            [
-              [21.249190139128046,48.706464410791426],
-              [21.249110028143008,48.70644595440345],
-              [21.24912187888114,48.70642077237204],
-              [21.249202463894164,48.706439541589106]
-            ],
-          ],
-        },
-        properties: {
-          color: "#00B367",
-        },
-      },
-    ],
   };
 
   const handleSourceClick = useCallback(event => {
@@ -52,6 +66,7 @@ function App() {
         point: {x, y}
       } = event;
       const hoveredFeature = features && features[0];
+      console.log(hoveredFeature && {feature: hoveredFeature, x, y});
       setClickInfo(hoveredFeature && {feature: hoveredFeature, x, y});
   }, []);
 
@@ -91,7 +106,7 @@ function App() {
         <div className=' bg-white m-8 h-fit rounded-3xl p-10 flex flex-col gap-5 w-full text-center justify-start align-self-center shadow-lg'>
           <scale-logo variant="magenta" transparent="true"></scale-logo>
           {screen === 'home' ? (
-            <BookNow updateScreen={updateScreen}></BookNow>
+            <BookNow updateScreen={updateScreen} selectedSpace={clickInfo}></BookNow>
           ): screen === 'profile' ? (
             <Profile updateScreen={updateScreen}></Profile>
           ): screen === 'login' ? (

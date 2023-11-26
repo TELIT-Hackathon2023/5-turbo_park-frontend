@@ -41,16 +41,21 @@ const Profile = ({ updateScreen }) => {
         }));
     };
 
-    const changeScreen = () => {
-      updateScreen('home');
+    const changeScreen = (screen) => {
+      updateScreen(screen);
     };
+
+    const logout = () => {
+        localStorage.removeItem("UserToken");
+        changeScreen('login')
+    }
 
     return (
         <div className="flex flex-col gap-5">
             <div className="flex justify-between">
-                    <span className="text-pink-600 material-symbols-rounded" onClick={() => changeScreen()}>arrow_back</span>
+                    <span className="text-pink-600 material-symbols-rounded cursor-pointer" onClick={() => changeScreen('home')}>arrow_back</span>
                     <p className="font-extrabold">Profile</p>
-                    <span className="opacity-0">fdsf</span>
+                    <span className="material-symbols-rounded text-pink-600 " onClick={() => logout()}>logout</span>
                 </div>
             <scale-text-field
                 placeholder="your name"

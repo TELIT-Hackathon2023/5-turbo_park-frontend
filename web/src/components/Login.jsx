@@ -27,6 +27,7 @@ const Login = ({ updateScreen }) => {
           response.json().then((value) => {
             const token = value.token;
             console.log(`received token: ${token}`);
+            localStorage.setItem("UserToken", token);
             // storeUserToken(token);
             changeScreen('home');
           });
