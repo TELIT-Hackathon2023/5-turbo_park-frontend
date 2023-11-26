@@ -91,10 +91,9 @@ const Profile = ({ updateScreen }) => {
             return;
           }
           response.json().then((json) => {
-            console.log(json);
+            setUser(json)
           })
         })
-        fetchData()
     }
 
     const logout = () => {
