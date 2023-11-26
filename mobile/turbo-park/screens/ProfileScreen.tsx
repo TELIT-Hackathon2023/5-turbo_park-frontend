@@ -88,8 +88,8 @@ const ProfileScreen = ({
           navigation.goBack();
         }}
         LeftButtonIcon={Back}
-        rightButtonAction={() => {
-          AsyncStorage.setItem("token", "");
+        rightButtonAction={async () => {
+          await AsyncStorage.setItem("token", "");
           navigation.navigate("signIn");
         }}
         RightButtonIcon={SignOut}

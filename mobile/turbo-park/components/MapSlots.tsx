@@ -1,38 +1,45 @@
-import { FillLayer, ShapeSource } from "@rnmapbox/maps";
+import { FillLayer, ShapeSource, SymbolLayer } from "@rnmapbox/maps";
+import { ParkingSlotList } from "../types/ParkingSlotList";
 
 interface MapSlotsProps {
-  // slots: [RouteList];
+  slots: ParkingSlotList[];
   onPress: (feature: GeoJSON.Feature) => void;
 }
 
-const MapRoutes = ({ onPress }: MapSlotsProps) => {
-  const style = {
+const MapRoutes = ({ slots, onPress }: MapSlotsProps) => {
+  const fillStyle = {
     fillColor: ["get", "color"],
     fillOpacity: 0.7,
   };
 
+  const symbolStyle = {
+    textField: ["get", "text"],
+    textSize: 16,
+    textColor: "#FFFFFF"
+  }
+
   const shape: GeoJSON.FeatureCollection = {
     type: "FeatureCollection",
-    features: [
-      {
-        type: "Feature",
-        id: "1",
-        geometry: {
-          type: "Polygon",
-          coordinates: [
-            [
-              [21.249190139128046,48.706464410791426],
-              [21.249110028143008,48.70644595440345],
-              [21.24912187888114,48.70642077237204],
-              [21.249202463894164,48.706439541589106]
-            ],
+    features: slots.map((slot) => ({
+      type: "Feature",
+      id: slot.id,
+      geometry: {
+        type: "Polygon",
+        coordinates: [
+          [
+            slot.coordinate1,
+            slot.coordinate2,
+            slot.coordinate3,
+            slot.coordinate4,
+            slot.coordinate1,
           ],
-        },
-        properties: {
-          color: "#00B367",
-        },
+        ],
       },
-    ],
+      properties: {
+        text: slot.id,
+        color: slot.status === "FREE" ? "green" : "red",
+      },
+    })),
   };
 
   return (
@@ -41,7 +48,8 @@ const MapRoutes = ({ onPress }: MapSlotsProps) => {
       shape={shape}
       onPress={(event) => onPress(event.features[0])}
     >
-      <FillLayer id="slots-layer" style={style} />
+      <FillLayer id="slots-layer" style={fillStyle} />
+      <SymbolLayer id="slots-numbers-layer" style={symbolStyle} />
     </ShapeSource>
   );
 };

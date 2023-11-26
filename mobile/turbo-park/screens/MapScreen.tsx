@@ -6,6 +6,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { SheetParams } from "../types/SheetParams";
 import { useColors } from "../constants/Colors";
 import MapSlots from "../components/MapSlots";
+import { ParkingSlotList } from "../types/ParkingSlotList";
 
 Mapbox.setAccessToken(
   "pk.eyJ1IjoibnBzbG92ZW5za3lyYWoiLCJhIjoiY2trZm14aWpuMHZjbDJxcXRxa3ltbnNpZiJ9.Vf8AdcK9odZlcLxYU18XtQ"
@@ -20,6 +21,19 @@ const MapScreen = ({
   const bottomInset = 400; // percentual padding
   const cameraRef = useRef<Camera>(null);
   const colors = useColors();
+
+  const [parkingSlots, setParkingSlots] = useState<ParkingSlotList[]>()
+
+  useEffect(() => {
+    fetch("http://147.232.155.76:8080/parkingslot/all")
+      .then((response) => response.json() as Promise<ParkingSlotList[]>)
+      .then(setParkingSlots)
+      .catch(console.log);
+  }, [])
+
+  if (!parkingSlots) {
+    return <ActivityIndicator color={colors.tint} />
+  }
 
   return (
     <MapView
@@ -46,7 +60,7 @@ const MapScreen = ({
           },
         }}
       />
-      <MapSlots onPress={(feature) => console.log({feature})} />
+      <MapSlots slots={parkingSlots} onPress={(feature) => console.log({feature})} />
     </MapView>
   );
 };

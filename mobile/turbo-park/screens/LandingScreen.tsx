@@ -2,7 +2,14 @@ import {
   BottomSheetNavigationOptions,
   BottomSheetScreenProps,
 } from "@th3rdwave/react-navigation-bottom-sheet";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  ActivityIndicator,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import SheetBackground from "../components/SheetBackground";
 import { BottomSheetBackdrop } from "@gorhom/bottom-sheet";
 import BookSlot from "../components/BookSlot";
@@ -10,12 +17,36 @@ import EditSlot from "../components/EditSlot";
 import { SheetParams } from "../types/SheetParams";
 import Profile from "../assets/profile.svg";
 import { useColors } from "../constants/Colors";
+import { useEffect, useState } from "react";
+import { EmployeeTicket } from "../types/EmployeeTicket";
+import { Employee } from "../types/Employee";
 
 const LandingScreen = ({
   route,
   navigation,
 }: BottomSheetScreenProps<SheetParams, "landing">) => {
   const colors = useColors();
+
+  const [employee, setEmployee] = useState<Employee>();
+  const [hasFetchedTicket, setHasFetchedTicket] = useState(false);
+  const [employeeTicket, setEmployeeTicket] = useState<EmployeeTicket>();
+
+  useEffect(() => {
+    fetch(`http://147.232.155.76:8080/employee/${route.params.token}`)
+      .then((response) => response.json() as Promise<Employee>)
+      .then(setEmployee)
+      .catch(console.log);
+
+    fetch(`http://147.232.155.76:8080/ticket/user/${route.params.token}`)
+      .then((response) => response.json() as Promise<EmployeeTicket>)
+      .then(setEmployeeTicket)
+      .catch(console.log)
+      .finally(() => setHasFetchedTicket(true));
+  }, []);
+
+  if (!employee || !hasFetchedTicket) {
+    return <ActivityIndicator color={colors.tint} />;
+  }
 
   return (
     <View style={styles.container}>
@@ -24,11 +55,27 @@ const LandingScreen = ({
         source={require("../assets/telekom-logo.jpg")}
       />
 
-      <TouchableOpacity style={styles.profileButton} onPress={() => {
-        navigation.navigate("profile", { token: route.params.token })
-      }}>
+      <TouchableOpacity
+        style={styles.profileButton}
+        onPress={() => {
+          navigation.navigate("profile", { token: route.params.token });
+        }}
+      >
         <Profile width={32} height={32} color={colors.tint} />
       </TouchableOpacity>
+
+      {employeeTicket && (
+        <EditSlot
+          name={employee.name}
+          slotId={employeeTicket.parkingSlotID}
+          fromTime={employeeTicket.startDate}
+          toTime={employeeTicket.endDate}
+          plate={employee.licencePlateNumber}
+          onPress={() => {
+            console.log("edit")
+          }}
+        />
+      )}
 
       {/* <BookSlot name="John" onPress={() => {}} /> */}
 

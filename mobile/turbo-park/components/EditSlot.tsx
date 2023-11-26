@@ -3,27 +3,36 @@ import { useColors } from "../constants/Colors";
 
 interface EditSlotProps {
   name: string;
-  slotId: string;
-  time: string;
+  slotId: number;
+  fromTime: string;
+  toTime: string;
   plate: string;
   onPress: () => void;
 }
 
-const EditSlot = ({ name, slotId, time, plate, onPress }: EditSlotProps) => {
+const EditSlot = ({ name, slotId, fromTime, toTime, plate, onPress }: EditSlotProps) => {
   const colors = useColors();
+  const fromDate = new Date(fromTime);
+  const toDate = new Date(toTime);
 
   return (
     <View style={styles.container}>
       <Text style={[styles.titleText, { color: colors.text }]}>
-        Hey {name}!
+        Check your ticket {name}!
       </Text>
 
       <Text style={[styles.subtitleText, { color: colors.secondaryText }]}>
+        {"Slot: "}
         {slotId}
       </Text>
 
       <Text style={[styles.subtitleText, { color: colors.secondaryText }]}>
-        {time}
+        {fromTime.split("T")[0]}
+        {" "}
+        {fromDate.getHours()}
+        {":00-"}
+        {toDate.getHours()}
+        {":00"}
       </Text>
 
       <Text style={[styles.subtitleText, { color: colors.secondaryText }]}>
@@ -34,7 +43,7 @@ const EditSlot = ({ name, slotId, time, plate, onPress }: EditSlotProps) => {
         style={[styles.button, { backgroundColor: colors.tint }]}
         onPress={onPress}
       >
-        <Text style={styles.buttonText}>Edit</Text>
+        <Text style={styles.buttonText}>Edit Ticket</Text>
       </TouchableOpacity>
     </View>
   );
